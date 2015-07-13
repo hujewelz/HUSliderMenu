@@ -15,6 +15,7 @@ class HUSecondViewController: UITableViewController {
 
         self.view.backgroundColor = UIColor.blueColor()
         self.title = "二月"
+    
 
     }
 

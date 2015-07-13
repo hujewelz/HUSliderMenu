@@ -16,6 +16,7 @@ class HUViewController: HUMainViewController {
         self.transformWithScale = false
         //self.leftMenuBarItemTitle = "HHHH"
         //self.leftMenuBarItemImage = ""
+
         
         let rootView = HUFirstViewController()
         let secView = HUSecondViewController()
@@ -24,9 +25,11 @@ class HUViewController: HUMainViewController {
         self.viewControllers = [rootView, secView, thirdView]
         
        
-
     }
     
+    var menuItems = [ ["title": "首页", "image": "btn_save"],
+                      ["title": "第二页", "image": "btn_share"],
+                      ["title": "第三页", "image": "btn_support"] ]
     
 
     override func didReceiveMemoryWarning() {
@@ -35,14 +38,20 @@ class HUViewController: HUMainViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func numberOfItems() -> Int {
+        return menuItems.count
     }
-    */
+    
+    override func leftMenu(menu: HULeftMenu, menuItemAtIndex index: Int) -> AnyObject {
+        let item = menu.menuItemAtIndex(index) as! HUMenuItenCell
+       
+        item.selectedBackground = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.5)
+        item.titleLabText = menuItems[index]["title"]
+        item.image = UIImage(named: menuItems[index]["image"]!)
+        
+       // println("index: \(index)")
+        return item
+    }
+
 
 }

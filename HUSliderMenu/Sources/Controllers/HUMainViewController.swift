@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HUMainViewController: UIViewController, HULeftMenuDelegate {
+class HUMainViewController: UIViewController, HULeftMenuDelegate, HULeftMenuDataSource {
    
     private var currentViewController: UIViewController!
     private var contentViewControllers: [UIViewController] = []
@@ -16,6 +16,8 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
     var transformWithScale = true
     var leftMenuBarItemTitle: String = "Menu"
     var leftMenuBarItemImage: String = "nav_btn_menu"
+    
+    var menuView: HULeftMenu!
    
     private var bg: UIImageView!
     
@@ -40,9 +42,10 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
         
         var leftMenu = HULeftMenu(frame: CGRect(x: 0, y: 80, width: 200, height: 400))
         leftMenu.delegate = self
+        leftMenu.dataSoruce = self
         view.addSubview(leftMenu)
         
-        
+        self.menuView = leftMenu
     }
     
     var viewControllers: [UIViewController] {
@@ -72,6 +75,14 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
         self.addChildViewController(nav)
     }
     
+    func numberOfItems() -> Int {
+        return 0
+    }
+    
+    func leftMenu(menu: HULeftMenu, menuItemAtIndex index: Int) -> AnyObject {
+        let item = menu.menuItemAtIndex(index) as! HUMenuItenCell
+        return item
+    }
     
     func leftMenu(menu: HULeftMenu, didSelectedItemAtIndex index: Int, toNewItem newIndex: Int) {
        
