@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5129E9D61B53BE3E002A5EC4 /* HUViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5129E9D51B53BE3E002A5EC4 /* HUViewController.swift */; };
 		519A980D1B5350B800FEBF3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 519A980C1B5350B800FEBF3E /* Images.xcassets */; };
 		519A98101B5350B800FEBF3E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 519A980E1B5350B800FEBF3E /* LaunchScreen.xib */; };
 		519A981C1B5350B900FEBF3E /* HUSliderMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519A981B1B5350B900FEBF3E /* HUSliderMenuTests.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5129E9D51B53BE3E002A5EC4 /* HUViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUViewController.swift; sourceTree = "<group>"; };
 		519A98001B5350B800FEBF3E /* HUSliderMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HUSliderMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		519A98041B5350B800FEBF3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		519A980C1B5350B800FEBF3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				519A982A1B53526300FEBF3E /* HUMainViewController.swift */,
+				5129E9D51B53BE3E002A5EC4 /* HUViewController.swift */,
 				519A98321B5381C900FEBF3E /* HUSecondViewController.swift */,
 				519A98301B536C9200FEBF3E /* HUFirstViewController.swift */,
 			);
@@ -249,6 +252,7 @@
 				519A982C1B53526300FEBF3E /* AppDelegate.swift in Sources */,
 				519A982D1B53526300FEBF3E /* HUMainViewController.swift in Sources */,
 				519A98311B536C9200FEBF3E /* HUFirstViewController.swift in Sources */,
+				5129E9D61B53BE3E002A5EC4 /* HUViewController.swift in Sources */,
 				519A982F1B53528D00FEBF3E /* HULeftMenu.swift in Sources */,
 				519A98331B5381C900FEBF3E /* HUSecondViewController.swift in Sources */,
 			);
@@ -440,6 +444,7 @@
 				519A98211B5350B900FEBF3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		519A98221B5350B900FEBF3E /* Build configuration list for PBXNativeTarget "HUSliderMenuTests" */ = {
 			isa = XCConfigurationList;
@@ -448,6 +453,7 @@
 				519A98241B5350B900FEBF3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

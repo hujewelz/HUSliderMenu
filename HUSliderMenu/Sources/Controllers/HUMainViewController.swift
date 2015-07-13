@@ -9,44 +9,43 @@
 import UIKit
 
 class HUMainViewController: UIViewController, HULeftMenuDelegate {
-    var viewControllers: [UIViewController]!
-    var currentViewController: UIViewController!
-    var contentViewControllers: [UIViewController] = []
+   
+    private var currentViewController: UIViewController!
+    private var contentViewControllers: [UIViewController] = []
+   
+    var transformWithScale = true
+    var leftMenuBarItemTitle: String = "Menu"
+    var leftMenuBarItemImage: String = "nav_btn_menu"
+   
+    private var bg: UIImageView!
+    
     
     let scale = 400 / UIScreen.mainScreen().bounds.height
 
+    var backgroundImage: UIImage {
+        set {
+            bg.image = newValue
+        }
+        get {
+            return bg.image!
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let bg = UIImageView(frame: view.bounds)
-        bg.image = UIImage(named: "sidebar_bg.jpg")
+        bg = UIImageView(frame: view.bounds)
+        //bg.image = backgroundImage
         view.addSubview(bg)
         
         var leftMenu = HULeftMenu(frame: CGRect(x: 0, y: 80, width: 200, height: 400))
         leftMenu.delegate = self
         view.addSubview(leftMenu)
         
-        let rootView = HUFirstViewController()
-        //self.setupViewController(rootView, title: "首页")
-        
-        
-        let secView = HUFirstViewController()
-        //self.setupViewController(secView, title: "二页")
-        
-        let thirdView = HUFirstViewController()
-        //self.setupViewController(thirdView, title: "三页")
-        self.childviewControllers = [rootView, secView, thirdView]
-        
-        
-       
-        
-        //self.rootViewController = UINavigationController(rootViewController: rootView)
-        
-        
         
     }
     
-    var childviewControllers: [UIViewController] {
+    var viewControllers: [UIViewController] {
         set {
             
             for viewController in newValue {
@@ -62,29 +61,10 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
         }
     }
     
-//    var rootViewController: UIViewController {
-//        set {
-//            if currentViewController != nil {
-//                currentViewController.removeFromParentViewController()
-//            }
-//    
-//            view.addSubview(newValue.view)
-//            //self.addChildViewController(currentViewController)
-//        }
-//        
-//        get {
-//            return currentViewController
-//        }
-//    }
     
     func setupViewController(viewController: UIViewController) {
-        viewController.view.backgroundColor =  UIColor.redColor()
-        
-        let leftBtn = UIButton.buttonWithType(.Custom) as! UIButton
-        leftBtn.frame = CGRect(x: 0, y: 0, width: 60, height: 44)
-        leftBtn.setTitle("Menu", forState: UIControlState.Normal)
-        leftBtn.addTarget(self, action: "sliderLeft", forControlEvents: .TouchUpInside)
-        leftBtn.setTitleColor(UIColor.redColor(), forState: .Normal)
+       
+        let leftBtn = self.leftMenuBarItem()
         
         let nav = UINavigationController(rootViewController: viewController)
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBtn)
@@ -92,9 +72,16 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
         self.addChildViewController(nav)
     }
     
+    
     func leftMenu(menu: HULeftMenu, didSelectedItemAtIndex index: Int, toNewItem newIndex: Int) {
-       // rootViewController.view.removeFromSuperview()
-        println(self.childViewControllers.count)
+       
+        if index >= self.contentViewControllers.count {
+            return
+        }
+        
+        if newIndex >= self.contentViewControllers.count {
+            return
+        }
         
         let oldVc = self.contentViewControllers[index] as! UINavigationController
         oldVc.view.removeFromSuperview()
@@ -114,16 +101,20 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
     }
     
     
-    func sliderLeft() {
-        contentViewControllers.count
-        println("contentViewControllers.count: \(contentViewControllers.count)")
-        
+     func sliderLeft() {
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             if CGAffineTransformIsIdentity(self.currentViewController.view.transform) {
                 
-                var scaleform = CGAffineTransformMakeScale(self.scale, self.scale)
-                var trans = CGAffineTransformTranslate(scaleform, 200, 10);
+                var trans = CGAffineTransformMakeTranslation(200, 0)
+                
+                if self.transformWithScale {
+                    var scaleform = CGAffineTransformMakeScale(self.scale, self.scale)
+                    trans = CGAffineTransformTranslate(scaleform, 200, 10);
+                    
+                }
+                
                 self.currentViewController.view.transform = trans
+                
                 
             } else {
                 self.currentViewController.view.transform = CGAffineTransformIdentity
@@ -132,6 +123,26 @@ class HUMainViewController: UIViewController, HULeftMenuDelegate {
         })
         
     }
+    
+   private func leftMenuBarItem() -> UIButton {
+        let leftBtn = UIButton.buttonWithType(.Custom) as! UIButton
+        leftBtn.frame = CGRect(x: 0, y: 0, width: 60, height: 44)
+    
+    
+        if let image =  UIImage(named: self.leftMenuBarItemImage) {
+            leftBtn.setImage(image, forState:.Normal)
+            leftBtn.contentHorizontalAlignment = .Left
+        } else {
+            leftBtn.setTitle(self.leftMenuBarItemTitle, forState: .Normal)
+            leftBtn.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        }
+    
+        leftBtn.addTarget(self, action: "sliderLeft", forControlEvents: .TouchUpInside)
+    
+        return leftBtn
+    }
+    
+  
 
 }
 

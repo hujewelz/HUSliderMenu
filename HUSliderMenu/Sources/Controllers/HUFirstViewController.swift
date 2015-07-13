@@ -12,8 +12,8 @@ class HUFirstViewController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.view.backgroundColor = UIColor.redColor()
+        self.title = "首页"
        
         
     }

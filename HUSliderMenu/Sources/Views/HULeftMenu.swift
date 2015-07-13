@@ -10,12 +10,26 @@ import UIKit
 
 protocol HULeftMenuDelegate: NSObjectProtocol {
     
+    func numberOfItems() -> Int
+    
+    func leftMenu(menu: HULeftMenu, menuItemAtIndex index: Int)
+    
     func leftMenu(menu: HULeftMenu,  didSelectedItemAtIndex index: Int, toNewItem newIndex: Int)
+}
+
+protocol HULeftMenuDataSource: NSObjectProtocol {
+    
+    func numberOfItems() -> Int
+    
+    func leftMenu(menu: HULeftMenu, menuItemAtIndex index: Int)
+    
 }
 
 class HULeftMenu: UIView {
     weak var selectedItem: UIButton!
-    weak var delegate: HULeftMenuDelegate!     
+    weak var delegate: HULeftMenuDelegate!
+    weak var dataSoruce: HULeftMenuDataSource!
+    
     let ItemHeight: CGFloat = 60.0
     
     override init(frame: CGRect) {
@@ -75,9 +89,9 @@ class HULeftMenu: UIView {
         
         button.selected = true
          println("old: \(selectedItem.tag), new: \(button.tag)")
-        //if self.delegate!= nil {
-            self.delegate.leftMenu(self, didSelectedItemAtIndex: selectedItem.tag, toNewItem: button.tag)
-       // }
+        
+        self.delegate.leftMenu(self, didSelectedItemAtIndex: selectedItem.tag, toNewItem: button.tag)
+       
         selectedItem = button
         
     }
