@@ -92,6 +92,7 @@ class HUMenuItenCell: UIButton {
     
 }
 
+
 class HULeftMenu: UIView {
     weak var selectedItem: UIButton!
     weak var delegate: HULeftMenuDelegate?
@@ -111,25 +112,10 @@ class HULeftMenu: UIView {
     }
     
     func setupMenuItem() -> HUMenuItenCell{
+        
         var button = HUMenuItenCell(frame: CGRectZero)
-        
-//        //button.setTitle(title, forState: .Normal)
-//        button.tag = self.subviews.count
-//        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-//        
-//        button.setBackgroundImage(self.imageWithColor(UIColor.redColor()), forState: UIControlState.Selected)
-//        
-//        //button.setImage(UIImage(named: imageNamed), forState: .Normal)
-//        button.adjustsImageWhenHighlighted = false
-//        
-//        button.contentHorizontalAlignment = .Left
-//        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-//        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-//        
         button.addTarget(self, action: "buttonClicked:", forControlEvents: .TouchUpInside)
-        
         self.addSubview(button)
-        
         
         return button
     }
