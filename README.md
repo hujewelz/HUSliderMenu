@@ -56,10 +56,10 @@ override func viewDidLoad() {
         return view
     }
 ```
-* 带缩放效果 
-	![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
-	![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)<br>
-* 不带缩放效果
+带缩放效果<br>
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)<br>
+不带缩放效果<br>
 	![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.png)
 	![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.png)
 
