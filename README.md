@@ -42,10 +42,25 @@ override func viewDidLoad() {
         return item
     }
 ```
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.jpg)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.jpg)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.jpg)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.jpg)
+	其实这里和UITableView的使用差不多<br>
+	还可以在这个方法中设置自己的头视图，定制性很高
+	```Swift
+	func headerViewForLeftMenu(menu: HULeftMenu) -> UIView? {
+        var view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 120))
+   
+        var icon = UIImageView(frame: CGRect(x: 40, y: 40, width: 60, height: 60))
+        icon.image = UIImage(named: "user.jpg")
+        icon.layer.cornerRadius = 30
+        icon.layer.masksToBounds = true
+        view.addSubview(icon)
+        
+        return view
+    }
+	```
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.png)
 
 
 这样写好后，就不用再担心菜单的问题了，可以安心的写自己要添加的控制器里面的内容了。
