@@ -42,8 +42,8 @@ override func viewDidLoad() {
         return item
     }
 ```
-	其实这里和UITableView的使用差不多<br>
-	还可以在这个方法中设置自己的头视图，定制性很高
+其实这里和UITableView的使用差不多<br>
+还可以在这个方法中设置自己的头视图，定制性很高
 	```Swift
 	func headerViewForLeftMenu(menu: HULeftMenu) -> UIView? {
         var view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 120))
