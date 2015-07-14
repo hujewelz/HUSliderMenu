@@ -44,7 +44,7 @@ override func viewDidLoad() {
 ```
 其实这里和UITableView的使用差不多<br>
 还可以在这个方法中设置自己的头视图，定制性很高
-	```Swift
+```Swift
 	func headerViewForLeftMenu(menu: HULeftMenu) -> UIView? {
         var view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 120))
    
@@ -56,7 +56,7 @@ override func viewDidLoad() {
         
         return view
     }
-	```
+```
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.png)
