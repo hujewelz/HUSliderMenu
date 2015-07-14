@@ -9,8 +9,10 @@ HUSliderMenu
 * 手动导入:
 	* 将HUSliderMenu文件夹中的Resource文件夹加入到项目中
 	* 只要让根控制器继承HUSliderMenuViewController即可
+
 参考
 -----
+
 ```Swift
 override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,3 +42,13 @@ override func viewDidLoad() {
         return item
     }
 ```
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.jpg)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.jpg)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.jpg)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.jpg)
+
+
+这样写好后，就不用再担心菜单的问题了，可以安心的写自己要添加的控制器里面的内容了。
+在自己的控制器的viewDidLoad中设置一下背景色, 不然看不到内容。
+不太清楚的可以参考Sample文件夹中的例子
+
