@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>F509F724-FF5D-4177-848B-0ADF26390EDD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>HUSliderMenu</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>BE9DC8A7E0DF753F66AAA404EDE14B436F2FCD95</key>
+		<string>github.com:hujewelz/HUSliderMenu.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>HUSliderMenu.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>BE9DC8A7E0DF753F66AAA404EDE14B436F2FCD95</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:hujewelz/HUSliderMenu.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BE9DC8A7E0DF753F66AAA404EDE14B436F2FCD95</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BE9DC8A7E0DF753F66AAA404EDE14B436F2FCD95</string>
+			<key>IDESourceControlWCCName</key>
+			<string>HUSliderMenu</string>
+		</dict>
+	</array>
+</dict>
+</plist>
