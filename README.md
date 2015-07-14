@@ -17,17 +17,16 @@ HUSliderMenu
 override func viewDidLoad() {
         super.viewDidLoad()
         self.backgroundImage = UIImage(named: "bg2.jpeg")! //设置背景图
-        //self.transformWithScale = false	//不缩放
-        //self.leftMenuBarItemTitle = "Menu"	//设置导航栏的菜单按钮文字
-        //self.leftMenuBarItemImage = ""	//设置导航栏的菜单按钮的图片	如果不设置，会使用默认的
+        //self.transformWithScale = false	//不缩放，默认缩放
+        //self.allowSpringAnimation = false		//不允许弹簧效果, 默认有弹簧效果
+        //self.leftMenuBarItemTitle = "Menu"	//设置导航栏的菜单按钮文字，如果不设置，会使用默认的
+        //self.leftMenuBarItemImage = ""	//设置导航栏的菜单按钮的图片，如果不设置，会使用默认的
         
         let rootView = HUFirstViewController()
         let secView = HUSecondViewController()
         let thirdView = HUThirdViewController()
         
         self.viewControllers = [rootView, secView, thirdView]   //设置左侧所有要显示的控制器，不要添加NavigationViewcontroller
-        
-       
     }
 
     override func numberOfItems() -> Int {	//左侧菜单数目
@@ -57,8 +56,10 @@ override func viewDidLoad() {
         return view
     }
 ```
+* 带缩放效果
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)<br>
+* 不带缩放效果
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.png)
 ![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.png)
 
