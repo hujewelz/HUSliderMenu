@@ -13,8 +13,8 @@ class HUSecondViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.blueColor()
-        self.title = "二月"
+        self.view.backgroundColor = UIColor.orangeColor()
+        self.title = "第二页"
     
 
     }
@@ -37,6 +37,8 @@ class HUSecondViewController: UITableViewController {
         // Return the number of rows in the section.
         return 0
     }
+    
+    
 
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

@@ -8,24 +8,16 @@
 
 import UIKit
 
-extension UIImage {
-    class func imageWithColor(color: UIColor) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1.0, height: 10), false, 0.0)
-        
-        color.set()
-        UIRectFill(CGRect(x: 0.0, y: 0.0, width: 1.0, height: 10))
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        
-        UIGraphicsEndImageContext()
-        
-        return image
-    }
-}
 
-protocol HULeftMenuDelegate: NSObjectProtocol {
+@objc protocol HULeftMenuDelegate: NSObjectProtocol {
     
     func leftMenu(menu: HULeftMenu,  didSelectedItemAtIndex index: Int, toNewItem newIndex: Int)
+  
+    optional func footerViewForLeftMenu(menu: HULeftMenu) -> UIView?
+    
+    optional func headerViewForLeftMenu(menu: HULeftMenu) -> UIView?
+    
+    
 }
 
 protocol HULeftMenuDataSource: NSObjectProtocol {
@@ -36,113 +28,97 @@ protocol HULeftMenuDataSource: NSObjectProtocol {
     
 }
 
-class HUMenuItenCell: UIButton {
-    
-    var titleLabText: String? {
-        set {
-            self.setTitle(newValue, forState: .Normal)
-        }
-        
-        get {
-            return self.currentTitle
-        }
-    }
-    
-    
-    var image: UIImage? {
-        set {
-            self.setImage(newValue, forState: .Normal)
-        }
-        
-        get {
-            return self.currentImage
-        }
-    }
-    
-    var selectedBackground: UIColor? {
-        set {
-            self.setBackgroundImage(UIImage.imageWithColor(newValue!), forState: UIControlState.Selected)
-        }
-        
-        get {
-           return self.backgroundColor
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.setupItem()
-    }
-    
-    func setupItem() {
-        
-        self.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        
-        self.adjustsImageWhenHighlighted = false
-        
-        self.contentHorizontalAlignment = .Left
-        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        self.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-    }
-
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
 
 class HULeftMenu: UIView {
+    
     weak var selectedItem: UIButton!
     weak var delegate: HULeftMenuDelegate?
     weak var dataSoruce: HULeftMenuDataSource?
     
-    var menuItem: UIButton?
-    let ItemHeight: CGFloat = 60.0
+    var headerView: UIView?
+    var footerView: UIView!
+    
+   // var menuItem: UIButton?
+    
+    let sHeight = UIScreen.mainScreen().bounds.height
+    let scale: CGFloat = 0.78
+    let maxRowHeight: CGFloat = 60.0
+    let minRowHeight: CGFloat = 40.0
+    
+    var headerHeight: CGFloat = 80.0
+    var footerHeight: CGFloat = 40.0
+
     
     override init(frame: CGRect) {
+        
         super.init(frame: frame)
         self.backgroundColor = UIColor.clearColor()
-    
+        
     }
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupMenuItem() -> HUMenuItenCell{
+    func setupMenuItem() {
         
-        var button = HUMenuItenCell(frame: CGRectZero)
-        button.addTarget(self, action: "buttonClicked:", forControlEvents: .TouchUpInside)
-        self.addSubview(button)
+        self.clipsToBounds = true
         
-        return button
-    }
-    
-    func menuItemAtIndex(index: Int) -> AnyObject {
-        return self.subviews[index]
+        //setup header view
+        var view = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: headerHeight))
+        view.backgroundColor = UIColor.clearColor()
+        headerView = view
+        
+        if let header = delegate?.headerViewForLeftMenu?(self) {
+            headerView = header
+        }
+        
+        self.addSubview(headerView!)
+        
+        
+        // setup menuCell
+        if let counts = self.dataSoruce?.numberOfItems() {
+            var height = (self.bounds.height-headerHeight-footerHeight) / CGFloat(counts) - 1
+            
+            if height > maxRowHeight {
+                height = maxRowHeight
+            }
+            
+            if height < minRowHeight {
+                height = minRowHeight
+            }
+            
+            for i in 1...counts {
+                
+                var button = HUMenuItenCell(frame: CGRectZero)
+                button.frame = CGRectMake(0, height*CGFloat(i-1)+headerView!.bounds.height+1, self.bounds.width, height)
+                button.tag = i-1
+                button.addTarget(self, action: "buttonClicked:", forControlEvents: .TouchUpInside)
+                self.addSubview(button)
+
+                self.dataSoruce?.leftMenu(self, menuItemAtIndex: i-1)
+                
+            }
+            selectedItem = self.subviews[1] as! HUMenuItenCell
+            selectedItem.selected = true
+        }
+        
+        //setup footer View
+        
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if let counts = self.dataSoruce?.numberOfItems() {
-            for i in 0..<counts {
-                self.setupMenuItem()
-                var btn = self.subviews[i] as! HUMenuItenCell
-                btn.tag = i
-                btn.frame = CGRectMake(0, ItemHeight*CGFloat(i), self.bounds.width, ItemHeight)
-                
-                self.dataSoruce?.leftMenu(self, menuItemAtIndex: i)
-                
-            }
-            selectedItem = self.subviews[0] as! HUMenuItenCell
-            selectedItem.selected = true
-        }
-        
+        self.setupMenuItem()
         
     }
+    
+    
+    func menuItemAtIndex(index: Int) -> AnyObject {
+        return self.subviews[index+1]
+    }
+    
     
     func buttonClicked(button: UIButton) {
         println("selected at \(button.tag)")
