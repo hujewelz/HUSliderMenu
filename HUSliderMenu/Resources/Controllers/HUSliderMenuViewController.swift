@@ -9,11 +9,18 @@
 import UIKit
 
 class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMenuDataSource, UIGestureRecognizerDelegate {
-   
-    var transformWithScale = true   //是否允许缩放效果
-    var allowSpringAnimation = true ////是否允许弹簧效果
-    var leftMenuBarItemTitle: String = "Menu"   //设置菜单按钮标题
-    var leftMenuBarItemImage: String = "menu.png"   //设置菜单按钮图标
+    
+    ///是否允许缩放效果
+    var allowTransformWithScale = true
+    
+    ///是否允许弹簧效果
+    var allowSpringAnimation = true
+    
+    //设置菜单按钮标题
+    var leftMenuBarItemTitle: String = "Menu"
+    
+    //设置菜单按钮图标
+    var leftMenuBarItemImage: String = "menu.png"
     
     var menuView: HULeftMenu!
    
@@ -28,7 +35,7 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     private let maskTag = 10
     private var canMoveLeft = false
     
-    let sWidth = UIScreen.mainScreen().bounds.width
+    private let sWidth = UIScreen.mainScreen().bounds.width
     
     var backgroundImage: UIImage {  //设置左侧菜单背景图片
         set {
@@ -169,7 +176,11 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
                 if canMoveLeft {
                    self.transWithOffSet(offsetX)
                     
-//                    println("origin : \(currentViewController.view.frame.origin.x)")
+                   println("origin : \(currentViewController.view.frame.origin.x)")
+                    
+                    if currentViewController.view.frame.origin.x < 0 {
+                        self.hiddenLeftMenu()
+                    }
 //                    self.transWithOffSet(-offsetX)
 //                    if currentViewController.view.frame.origin.x < 0 {
 //                       // self.canMoveLeft = false
@@ -179,10 +190,10 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
             }
             
             if offsetX > 0 { //右滑
-                
+                if currentViewController.view.frame.origin.x > sWidth*scale { return }
                 self.transRightWithOffSet(offsetX)
             }
-             println("offsetX: \(offsetX)")
+            // println("offsetX: \(offsetX)")
             return
         }
         
@@ -194,12 +205,13 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
             } else {
                 self.hiddenLeftMenu()
             }
-            println("ex: \(ex)")
+           // println("ex: \(ex)")
         }
        
             //self.sliderLeft()
      }
     
+    // MARK: only for pangesture
     private func transWithOffSet(offset: CGFloat) {
        // canMoveLeft = true
 
@@ -293,7 +305,7 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
             
             var trans = CGAffineTransformMakeTranslation(sWidth*self.scale, 0)
             
-            if self.transformWithScale {
+            if self.allowTransformWithScale {
                 var scaleform = CGAffineTransformMakeScale(self.scale, self.scale)
                 trans = CGAffineTransformTranslate(scaleform, tX/self.scale, 0);
                 
