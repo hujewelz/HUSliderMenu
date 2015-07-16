@@ -118,21 +118,23 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
         
         self.currentViewController = newVc
         
+        self.viewAnimationWithSpring(allowSpringAnimation, animation: { () -> () in
+            newVc.view.transform = CGAffineTransformIdentity
+        })
         
-        
-        if allowSpringAnimation {
-            
-            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-                newVc.view.transform = CGAffineTransformIdentity
-            }, completion: { (finished) -> Void in
-                
-            })
-        
-        } else {
-            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
-                newVc.view.transform = CGAffineTransformIdentity
-            })
-        }
+//        if allowSpringAnimation {
+//            
+//            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+//                newVc.view.transform = CGAffineTransformIdentity
+//            }, completion: { (finished) -> Void in
+//                
+//            })
+//        
+//        } else {
+//            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+//                newVc.view.transform = CGAffineTransformIdentity
+//            })
+//        }
         
         //移除遮盖
         self.currentViewController.view.viewWithTag(maskTag)?.removeFromSuperview()
@@ -143,19 +145,39 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     
      func sliderLeft() {
  
-        if allowSpringAnimation {
-            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
-                    self.showLeftMenu()
-                }, completion: { (finished) -> Void in
+        self.viewAnimationWithSpring(allowSpringAnimation, animation: { () -> () in
+            //self.showLeftMenu()
+            var mask = UIButton.buttonWithType(.Custom) as! UIButton
+            mask.tag = self.maskTag
+            mask.frame = self.currentViewController.view.frame
+            mask.addTarget(self, action: "hideLeftMenu:", forControlEvents: .TouchUpInside)
+            self.currentViewController.view.addSubview(mask)
+            
+            let leftPadding = self.sWidth * (1-self.scale) * 0.5
+            let tX = self.menuWidth - leftPadding
+            
+            if CGAffineTransformIsIdentity(self.currentViewController.view.transform) {
+                
+                self.canMoveLeft = true
+                
+                var trans = CGAffineTransformMakeTranslation(self.sWidth*self.scale, 0)
+                
+                if self.allowTransformWithScale {
+                    var scaleform = CGAffineTransformMakeScale(self.scale, self.scale)
+                    trans = CGAffineTransformTranslate(scaleform, tX/self.scale, 0);
                     
-            })
+                }
+                
+                self.currentViewController.view.transform = trans
+                
+                
+            } else {
+                self.canMoveLeft = false
+                self.currentViewController.view.transform = CGAffineTransformIdentity
+                
+            }
             
-        } else {
-            
-            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
-                self.showLeftMenu()
-            })
-        }
+        })
         
     }
     
@@ -169,29 +191,30 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     //MARK: - handle gesture
     func panGestureHandle(recognizer: UIPanGestureRecognizer) {
         var offsetX: CGFloat = 0.0, ex: CGFloat = 0.0
+        
         if recognizer.state == .Changed {
             
              offsetX = recognizer.translationInView(view).x
             if offsetX < 0 { //左滑
                 if canMoveLeft {
-                   self.transWithOffSet(offsetX)
+                   //self.transWithOffSet(offsetX)
+                    self.transformTranslate(true, withOffset: offsetX)
                     
                    println("origin : \(currentViewController.view.frame.origin.x)")
                     
                     if currentViewController.view.frame.origin.x < 0 {
                         self.hiddenLeftMenu()
                     }
-//                    self.transWithOffSet(-offsetX)
-//                    if currentViewController.view.frame.origin.x < 0 {
-//                       // self.canMoveLeft = false
-//                        return
-//                    }
                 }
             }
             
+            
+
             if offsetX > 0 { //右滑
-                if currentViewController.view.frame.origin.x > sWidth*scale { return }
-                self.transRightWithOffSet(offsetX)
+                //self.transRightWithOffSet(offsetX)
+                if currentViewController.view.frame.origin.x >= sWidth*scale { return }
+                println("pan right")
+                self.transformTranslate(false, withOffset: offsetX)
             }
             // println("offsetX: \(offsetX)")
             return
@@ -200,7 +223,8 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
         if recognizer.state == .Ended {
              var ex = recognizer.translationInView(view).x
             if abs(ex) > sWidth * 0.5 {
-                self.transRightWithOffSet(sWidth*scale)
+               // self.transRightWithOffSet(sWidth*scale)
+                self.transformTranslate(false, withOffset: sWidth*scale)
                 
             } else {
                 self.hiddenLeftMenu()
@@ -212,68 +236,106 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
      }
     
     // MARK: only for pangesture
-    private func transWithOffSet(offset: CGFloat) {
-       // canMoveLeft = true
+//    private func transWithOffSet(offset: CGFloat) {
+//       // canMoveLeft = true
+//
+//        if allowSpringAnimation {
+//            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+//                
+//                var trans = CGAffineTransformTranslate(self.currentViewController.view.transform, offset, 0)
+//                self.currentViewController.view.transform = trans
+//                }, completion: { (finished) -> Void in
+//                    
+//            })
+//        } else {
+//            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+//                var trans = CGAffineTransformMakeTranslation(offset, 0)
+//                self.currentViewController.view.transform = trans
+//                
+//            })
+//        }
+//        
+//    }
 
-        if allowSpringAnimation {
-            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
-                
-                var trans = CGAffineTransformTranslate(self.currentViewController.view.transform, offset, 0)
-                self.currentViewController.view.transform = trans
-                }, completion: { (finished) -> Void in
-                    
-            })
-        } else {
-            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
-                var trans = CGAffineTransformMakeTranslation(offset, 0)
-                self.currentViewController.view.transform = trans
-                
-            })
-        }
+    //MARK: - 通过滑动位置处理菜单位置 translate为true向左划，false右划
+    private func transformTranslate(translae: Bool, withOffset offset: CGFloat) {
+        // canMoveLeft = true
+        var trans: CGAffineTransform?
+        self.viewAnimationWithSpring(allowSpringAnimation, animation: { () -> () in
+            if translae {
+                trans = CGAffineTransformTranslate(self.currentViewController.view.transform, offset, 0)
+            } else {
+                self.canMoveLeft = true
+                trans = CGAffineTransformMakeTranslation(offset, 0)
+            }
+            self.currentViewController.view.transform = trans!
+        })
+        
+//        if allowSpringAnimation {
+//            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+//                
+//                var trans = CGAffineTransformTranslate(self.currentViewController.view.transform, offset, 0)
+//                self.currentViewController.view.transform = trans
+//                }, completion: { (finished) -> Void in
+//                    
+//            })
+//        } else {
+//            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+//                var trans = CGAffineTransformMakeTranslation(offset, 0)
+//                self.currentViewController.view.transform = trans
+//                
+//            })
+//        }
         
     }
-
     
-    private func transRightWithOffSet(offset: CGFloat) {
-        canMoveLeft = true
-        if allowSpringAnimation {
-            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
-                
-                var trans = CGAffineTransformMakeTranslation(offset, 0)
-                self.currentViewController.view.transform = trans
-                
-                }, completion: { (finished) -> Void in
-                    
-            })
-        } else {
-            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
-                var trans = CGAffineTransformMakeTranslation(offset, 0)
-                self.currentViewController.view.transform = trans
-                
-            })
-        }
-
-    }
+//    private func transRightWithOffSet(offset: CGFloat) {
+//        canMoveLeft = true
+//        var trans: CGAffineTransform?
+//        if allowSpringAnimation {
+//            
+//            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+//                
+//                trans = CGAffineTransformMakeTranslation(offset, 0)
+//                self.currentViewController.view.transform = trans!
+//                
+//                }, completion: { (finished) -> Void in
+//                    
+//            })
+//        } else {
+//            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+//                trans = CGAffineTransformMakeTranslation(offset, 0)
+//                
+//            })
+//        }
+//        self.currentViewController.view.transform = trans!
+//    }
     
     private func hiddenLeftMenu() {
         
         println("-------------hiddenLeftMenu--------------")
-        if allowSpringAnimation {
-            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
-                
-                self.currentViewController.view.transform = CGAffineTransformIdentity
-                
-                }, completion: { (finished) -> Void in
-                    
-            })
-        } else {
-            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
-                self.currentViewController.view.transform = CGAffineTransformIdentity
-            })
-        }
+        
+        self.viewAnimationWithSpring(allowSpringAnimation, animation: { () -> () in
+            self.currentViewController.view.transform = CGAffineTransformIdentity
+        })
+        
+//        if allowSpringAnimation {
+//            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+//                
+//                self.currentViewController.view.transform = CGAffineTransformIdentity
+//                
+//                }, completion: { (finished) -> Void in
+//                    
+//            })
+//        } else {
+//            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+//                self.currentViewController.view.transform = CGAffineTransformIdentity
+//            })
+//        }
         
         canMoveLeft = false
     }
+    
     
     //MARK - gestureRecognizer delegate
     
@@ -289,41 +351,30 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     
     // MARK: - private func
     
-    private func showLeftMenu() {
-        var mask = UIButton.buttonWithType(.Custom) as! UIButton
-        mask.tag = maskTag
-        mask.frame = self.currentViewController.view.frame
-        mask.addTarget(self, action: "hideLeftMenu:", forControlEvents: .TouchUpInside)
-        self.currentViewController.view.addSubview(mask)
-        
-        let leftPadding = sWidth * (1-self.scale) * 0.5
-        let tX = self.menuWidth - leftPadding
-        
-        if CGAffineTransformIsIdentity(self.currentViewController.view.transform) {
-            
-            self.canMoveLeft = true
-            
-            var trans = CGAffineTransformMakeTranslation(sWidth*self.scale, 0)
-            
-            if self.allowTransformWithScale {
-                var scaleform = CGAffineTransformMakeScale(self.scale, self.scale)
-                trans = CGAffineTransformTranslate(scaleform, tX/self.scale, 0);
-                
-            }
-            
-            self.currentViewController.view.transform = trans
-            
-            
-        } else {
-            canMoveLeft = false
-            self.currentViewController.view.transform = CGAffineTransformIdentity
-            
-        }
+    /*private func showLeftMenu() {
+    
         
 
         
-    }
+    }*/
     
+    private func viewAnimationWithSpring(spring: Bool, animation:() -> ()) {
+        if spring {
+            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+                
+                animation()
+                
+                }, completion: { (finished) -> Void in
+                    
+            })
+            
+        } else {
+            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+                
+                animation()
+            })
+        }
+    }
 
     
     private func setupViewController(viewController: UIViewController) {
