@@ -57,11 +57,9 @@ override func viewDidLoad() {
     }
 ```
 带缩放效果<br>
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/1.png)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/2.png)<br>
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/b.gif)<br>
 不带缩放效果<br>
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/3.png)
-![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/4.png)
+![image](https://github.com/hujewelz/HUSliderMenu/raw/master/screenshots/a.gif)
 
 
 这样写好后，就不用再担心菜单的问题了，可以安心的写自己要添加的控制器里面的内容了。
@@ -76,4 +74,5 @@ override func viewDidLoad() {
 ------
 * 如果在使用过程中遇到BUG，希望你能联系我，谢谢（或者尝试下载最新的框架代码看看BUG修复没有）
 * 如果在使用过程中发现功能不够用，希望你能联系我，我非常想为这个框架增加更多好用的功能，谢谢
+* 如果需要OC版本，希望你能联系我，我会尽快制作OC版本，谢谢
 
