@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMenuDataSource {
+class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMenuDataSource, UIGestureRecognizerDelegate {
    
     var transformWithScale = true   //是否允许缩放效果
     var allowSpringAnimation = true ////是否允许弹簧效果
@@ -25,7 +25,11 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     private let animationDuration: NSTimeInterval = 0.5
     private let springDamping: CGFloat = 0.7
     private let springVelocity: CGFloat = 20
-
+    private let maskTag = 10
+    private var canMoveLeft = false
+    
+    let sWidth = UIScreen.mainScreen().bounds.width
+    
     var backgroundImage: UIImage {  //设置左侧菜单背景图片
         set {
             bg.image = newValue
@@ -36,8 +40,7 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
     }
     
    
-    
-    
+   // MARK: - life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         bg = UIImageView(frame: view.bounds)
@@ -55,8 +58,11 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
         
         self.menuView = leftMenu
         
+        self.view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: "panGestureHandle:"))
+        
     }
     
+    //MARK: - API
     var viewControllers: [UIViewController] {
         set {
             
@@ -98,8 +104,9 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
         oldVc.removeFromParentViewController()
         
         let newVc = self.contentViewControllers[newIndex] as! UINavigationController
-        newVc.view.transform = oldVc.view.transform
+        
         view.addSubview(newVc.view)
+        newVc.view.transform = oldVc.view.transform
         self.addChildViewController(newVc)
         
         self.currentViewController = newVc
@@ -120,6 +127,10 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
             })
         }
         
+        //移除遮盖
+        self.currentViewController.view.viewWithTag(maskTag)?.removeFromSuperview()
+        
+        canMoveLeft = true
     }
     
     
@@ -141,12 +152,144 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
         
     }
     
+    //MARK: - maskButton clicked hidden the menu
+    func hideLeftMenu(sender: UIButton) {   //点击右侧关闭
+        //println("hideLeftMenu")
+        self.hiddenLeftMenu()
+        sender.removeFromSuperview()
+    }
+    
+    //MARK: - handle gesture
+    func panGestureHandle(recognizer: UIPanGestureRecognizer) {
+        var offsetX: CGFloat = 0.0, ex: CGFloat = 0.0
+        if recognizer.state == .Changed {
+            
+             offsetX = recognizer.translationInView(view).x
+            if offsetX < 0 { //左滑
+                if canMoveLeft {
+                   self.transWithOffSet(offsetX)
+                    
+//                    println("origin : \(currentViewController.view.frame.origin.x)")
+//                    self.transWithOffSet(-offsetX)
+//                    if currentViewController.view.frame.origin.x < 0 {
+//                       // self.canMoveLeft = false
+//                        return
+//                    }
+                }
+            }
+            
+            if offsetX > 0 { //右滑
+                
+                self.transRightWithOffSet(offsetX)
+            }
+             println("offsetX: \(offsetX)")
+            return
+        }
+        
+        if recognizer.state == .Ended {
+             var ex = recognizer.translationInView(view).x
+            if abs(ex) > sWidth * 0.5 {
+                self.transRightWithOffSet(sWidth*scale)
+                
+            } else {
+                self.hiddenLeftMenu()
+            }
+            println("ex: \(ex)")
+        }
+       
+            //self.sliderLeft()
+     }
+    
+    private func transWithOffSet(offset: CGFloat) {
+       // canMoveLeft = true
+
+        if allowSpringAnimation {
+            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+                
+                var trans = CGAffineTransformTranslate(self.currentViewController.view.transform, offset, 0)
+                self.currentViewController.view.transform = trans
+                }, completion: { (finished) -> Void in
+                    
+            })
+        } else {
+            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+                var trans = CGAffineTransformMakeTranslation(offset, 0)
+                self.currentViewController.view.transform = trans
+                
+            })
+        }
+        
+    }
+
+    
+    private func transRightWithOffSet(offset: CGFloat) {
+        canMoveLeft = true
+        if allowSpringAnimation {
+            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+                
+                var trans = CGAffineTransformMakeTranslation(offset, 0)
+                self.currentViewController.view.transform = trans
+                
+                }, completion: { (finished) -> Void in
+                    
+            })
+        } else {
+            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+                var trans = CGAffineTransformMakeTranslation(offset, 0)
+                self.currentViewController.view.transform = trans
+                
+            })
+        }
+
+    }
+    
+    private func hiddenLeftMenu() {
+        
+        println("-------------hiddenLeftMenu--------------")
+        if allowSpringAnimation {
+            UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: springVelocity, options: nil, animations: { () -> Void in
+                
+                self.currentViewController.view.transform = CGAffineTransformIdentity
+                
+                }, completion: { (finished) -> Void in
+                    
+            })
+        } else {
+            UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+                self.currentViewController.view.transform = CGAffineTransformIdentity
+            })
+        }
+        
+        canMoveLeft = false
+    }
+    
+    //MARK - gestureRecognizer delegate
+    
+    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let nav: UINavigationController = self.currentViewController as? UINavigationController {
+            if nav.viewControllers.count == 1 {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    // MARK: - private func
+    
     private func showLeftMenu() {
-        let sWidth = UIScreen.mainScreen().bounds.width
+        var mask = UIButton.buttonWithType(.Custom) as! UIButton
+        mask.tag = maskTag
+        mask.frame = self.currentViewController.view.frame
+        mask.addTarget(self, action: "hideLeftMenu:", forControlEvents: .TouchUpInside)
+        self.currentViewController.view.addSubview(mask)
+        
         let leftPadding = sWidth * (1-self.scale) * 0.5
         let tX = self.menuWidth - leftPadding
         
         if CGAffineTransformIsIdentity(self.currentViewController.view.transform) {
+            
+            self.canMoveLeft = true
             
             var trans = CGAffineTransformMakeTranslation(sWidth*self.scale, 0)
             
@@ -160,11 +303,16 @@ class HUSliderMenuViewController: UIViewController, HULeftMenuDelegate, HULeftMe
             
             
         } else {
+            canMoveLeft = false
             self.currentViewController.view.transform = CGAffineTransformIdentity
             
         }
         
+
+        
     }
+    
+
     
     private func setupViewController(viewController: UIViewController) {
        

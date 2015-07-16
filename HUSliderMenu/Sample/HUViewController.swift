@@ -13,7 +13,8 @@ class HUViewController: HUSliderMenuViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.backgroundImage = UIImage(named: "bg2.jpeg")!
-        //self.transformWithScale = false
+        self.transformWithScale = false
+        //self.allowSpringAnimation = false
         //self.leftMenuBarItemTitle = "Menu"
         //self.leftMenuBarItemImage = ""
         
